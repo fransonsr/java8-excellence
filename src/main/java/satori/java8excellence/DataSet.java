@@ -1,7 +1,7 @@
 package satori.java8excellence;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DataSet {
 
@@ -24,15 +24,9 @@ public class DataSet {
 	 * @return females
 	 */
 	public List<NameData> females() {
-		List<NameData> filtered = new ArrayList<>();
-
-		for (NameData nameData : dataSet) {
-			if ("FEMALE".equals(nameData.getGender())) {
-				filtered.add(nameData);
-			}
-		}
-
-		return filtered;
+		return dataSet.stream()
+				.filter(nd -> "FEMALE".equals(nd.getGender()))
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -40,15 +34,9 @@ public class DataSet {
 	 * @return males
 	 */
 	public List<NameData> males() {
-		List<NameData> filtered = new ArrayList<>();
-
-		for (NameData nameData : dataSet) {
-			if ("MALE".equals(nameData.getGender())) {
-				filtered.add(nameData);
-			}
-		}
-
-		return filtered;
+		return dataSet.stream()
+				.filter(nd -> "MALE".equals(nd.getGender()))
+				.collect(Collectors.toList());
 	}
 
 }
