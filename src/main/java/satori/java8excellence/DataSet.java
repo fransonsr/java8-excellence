@@ -24,13 +24,8 @@ public class DataSet {
 	 * @return females
 	 */
 	public List<NameData> females() {
-		List<NameData> filtered = new ArrayList<>();
-
-		for (NameData nameData : dataSet) {
-			if ("FEMALE".equals(nameData.getGender())) {
-				filtered.add(nameData);
-			}
-		}
+		List<NameData> filtered = new ArrayList<>(dataSet);
+		filtered.removeIf(nd -> !"FEMALE".equals(nd.getGender()));
 
 		return filtered;
 	}
@@ -40,13 +35,8 @@ public class DataSet {
 	 * @return males
 	 */
 	public List<NameData> males() {
-		List<NameData> filtered = new ArrayList<>();
-
-		for (NameData nameData : dataSet) {
-			if ("MALE".equals(nameData.getGender())) {
-				filtered.add(nameData);
-			}
-		}
+		List<NameData> filtered = new ArrayList<>(dataSet);
+		filtered.removeIf(nd -> !"MALE".equals(nd.getGender()));
 
 		return filtered;
 	}
