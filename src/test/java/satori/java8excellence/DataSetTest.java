@@ -32,7 +32,7 @@ public class DataSetTest {
 	}
 
 	@Test
-	public void size() throws Exception {
+	public void size_consistsOfOnlyMalesAndFemales() throws Exception {
 		int total = test.males().size() + test.females().size();
 		assertThat(total, is(test.size()));
 	}
