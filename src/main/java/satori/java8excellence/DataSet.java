@@ -2,6 +2,7 @@ package satori.java8excellence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class DataSet {
 
@@ -24,15 +25,7 @@ public class DataSet {
 	 * @return females
 	 */
 	public List<NameData> females() {
-		List<NameData> filtered = new ArrayList<>();
-
-		for (NameData nameData : dataSet) {
-			if ("FEMALE".equals(nameData.getGender())) {
-				filtered.add(nameData);
-			}
-		}
-
-		return filtered;
+		return filter(nd -> "FEMALE".equals(nd.getGender()));
 	}
 
 	/**
@@ -40,13 +33,22 @@ public class DataSet {
 	 * @return males
 	 */
 	public List<NameData> males() {
+		return filter(nd -> "MALE".equals(nd.getGender()));
+	}
+
+	/**
+	 * Return a filtered subset of the dataset, according to the Predicate.
+	 * @param predicate
+	 * @return filtered list
+	 */
+	public  List<NameData> filter(Predicate<NameData> predicate) {
 		List<NameData> filtered = new ArrayList<>();
 
-		for (NameData nameData : dataSet) {
-			if ("MALE".equals(nameData.getGender())) {
-				filtered.add(nameData);
+		dataSet.forEach(nd -> {
+			if (predicate.test(nd)) {
+				filtered.add(nd);
 			}
-		}
+		});
 
 		return filtered;
 	}
