@@ -37,4 +37,25 @@ public class DataSetTest {
 		assertThat(total, is(test.size()));
 	}
 
+	@Test
+	public void size_filtered_2014_FEMALE() throws Exception {
+		int highestRank = Integer.MIN_VALUE;
+		String firstName = null;
+		int counter = 0;
+		for (NameData female : test.females()) {
+			if (female.getBirthYear() == 2012) {
+				counter++;
+				if (female.getRank() > highestRank) {
+					highestRank = female.getRank();
+					firstName = female.getName();
+				}
+			}
+		}
+
+		int year = 2012;
+		List<String> names = test.femaleNamesForYearInReverseRankOrder(year);
+		assertThat(names, hasSize(counter));
+		assertThat(names.get(0), is(firstName));
+	}
+
 }

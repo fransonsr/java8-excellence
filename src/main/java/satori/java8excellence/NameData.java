@@ -1,6 +1,12 @@
 package satori.java8excellence;
 
+import java.util.function.Predicate;
+
 public class NameData {
+
+	public static final Predicate<NameData> isMale = nameData -> "MALE".equals(nameData.gender);
+	public static final Predicate<NameData> isFemale = nameData -> "FEMALE".equals(nameData.gender);
+	public static final Predicate<NameData> isBirthYear(int year) { return nameData -> year == nameData.birthYear; }
 
 	private int birthYear;
 	private String gender;
@@ -56,4 +62,5 @@ public class NameData {
 	public void setRank(int rank) {
 		this.rank = rank;
 	}
+
 }

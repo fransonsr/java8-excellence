@@ -1,6 +1,8 @@
 package satori.java8excellence;
 
-import java.util.ArrayList;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
 
 public class DataSet {
@@ -11,44 +13,28 @@ public class DataSet {
 		this.dataSet = dataSet;
 	}
 
-	/**
-	 * Size of the data set.
-	 * @return size
-	 */
 	public int size() {
 		return dataSet.size();
 	}
 
-	/**
-	 * NameData filtered by "FEMALE".
-	 * @return females
-	 */
 	public List<NameData> females() {
-		List<NameData> filtered = new ArrayList<>();
-
-		for (NameData nameData : dataSet) {
-			if ("FEMALE".equals(nameData.getGender())) {
-				filtered.add(nameData);
-			}
-		}
-
-		return filtered;
+		return dataSet.stream()
+				.filter(NameData.isFemale)
+				.collect(toList());
 	}
 
-	/**
-	 * NameData filtered by "MALE".
-	 * @return males
-	 */
 	public List<NameData> males() {
-		List<NameData> filtered = new ArrayList<>();
+		return dataSet.stream()
+				.filter(NameData.isMale)
+				.collect(toList());
+	}
 
-		for (NameData nameData : dataSet) {
-			if ("MALE".equals(nameData.getGender())) {
-				filtered.add(nameData);
-			}
-		}
-
-		return filtered;
+	public List<String> femaleNamesForYearInReverseRankOrder(int year) {
+		return dataSet.stream()
+				.filter(NameData.isFemale.and(NameData.isBirthYear(year)))
+				.sorted(comparing(NameData::getRank).reversed())
+				.map(NameData::getName)
+				.collect(toList());
 	}
 
 }
