@@ -29,11 +29,12 @@ public class DataSet {
 				.collect(toList());
 	}
 
-	public List<String> femaleNamesForYearInReverseRankOrder(int year) {
+	public List<String> femaleNamesForYearInReverseRankOrder(final int year) {
 		return dataSet.stream()
 				.filter(NameData.isFemale.and(NameData.isBirthYear(year)))
-				.sorted(comparing(NameData::getRank).reversed())
+				.sorted(comparing(NameData::getRank).reversed().thenComparing(NameData::getName))
 				.map(NameData::getName)
+				.distinct()
 				.collect(toList());
 	}
 
