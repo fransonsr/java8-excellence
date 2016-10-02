@@ -11,7 +11,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -70,6 +74,11 @@ public class DataSetTest {
         Map<NameData.Ethnicity, List<String>> topMaleNames = topNames(orderEntries(ethnicityMap(test.males())), 3);
         Map<NameData.Ethnicity, List<String>> topFemaleNames = topNames(orderEntries(ethnicityMap(test.females())), 3);
 
+        System.out.println("TOP MALE NAMES - expected");
+        topMaleNames.forEach(dumpMap);
+        System.out.println("TOP FEMALE NAMES - expected");
+        topFemaleNames.forEach(dumpMap);
+
         Map<NameData.Ethnicity, List<String>> actualMaleNames = new HashMap<>();
         Map<NameData.Ethnicity, List<String>> actualFemaleNames = new HashMap<>();
 
@@ -93,10 +102,20 @@ public class DataSetTest {
             });
         });
 
+
+        // TODO workout comparison!
         assertThat(actualMaleNames, is(equalTo(topMaleNames)));
         assertThat(actualFemaleNames, is(equalTo(topFemaleNames)));
 
     }
+
+	private BiConsumer<NameData.Ethnicity, List<String>> dumpMap = (ethnicity, list) -> {
+	    System.out.println("\tEthnicity: " + ethnicity);
+	    list.stream()
+	    .forEach(name -> {
+	        System.out.println("\t\tName: " + name);
+	    });
+	};
 
     private Map<NameData.Ethnicity, List<String>> topNames(Map<NameData.Ethnicity, List<NameData>> map, int size) {
         Map<NameData.Ethnicity, List<String>> topNames = new HashMap<>();
@@ -113,7 +132,10 @@ public class DataSetTest {
     private Map<NameData.Ethnicity, List<NameData>> orderEntries(Map<NameData.Ethnicity, List<NameData>> map) {
         for (Entry<Ethnicity, List<NameData>> entry : map.entrySet()) {
             List<NameData> list = entry.getValue();
-            Collections.sort(list, RANK_COUNT_NAME_COMPARATOR);
+            SortedSet<NameData> set = new ConcurrentSkipListSet<>(RANK_COUNT_NAME_COMPARATOR);
+            set.addAll(list);
+            list.clear();
+            list.addAll(set);
         }
 
         return map;
@@ -130,7 +152,7 @@ public class DataSetTest {
                 return nameData2.getCount() - nameData1.getCount();
             }
 
-            return nameData2.getRank() - nameData1.getRank();
+            return nameData1.getRank() - nameData2.getRank();
         }
     };
 
@@ -147,6 +169,7 @@ public class DataSetTest {
 	    List<NameData> list = map.get(ethnicity);
 	    if(list == null) {
 	        list = new ArrayList<>();
+	        map.put(ethnicity, list);
 	    }
 
 	    return list;
@@ -156,6 +179,7 @@ public class DataSetTest {
 	    List<String> list = map.get(ethnicity);
 	    if(list == null) {
 	        list = new ArrayList<>();
+	        map.put(ethnicity, list);
 	    }
 
 	    return list;

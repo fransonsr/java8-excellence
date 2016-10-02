@@ -4,7 +4,6 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
@@ -12,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import satori.java8excellence.NameData.Ethnicity;
 
@@ -65,12 +63,13 @@ public class DataSet {
                     .distinct()
                     .collect(groupingBy(NameData::getGender,
                         groupingBy(NameData.ethnicityMapping, collectingAndThen(
-                            toCollection(() -> new ConcurrentSkipListSet<NameData>(byRankCountAndName)),
-                                list -> list.stream()
-                                    .map(nameData -> nameData.getName().toLowerCase())
-                                    .distinct()
-                                    .limit(count)
-                                    .collect(toList())))));
+                            toList(),
+                            list -> list.stream()
+                                .sorted(byRankCountAndName)
+                                .map(nameData -> nameData.getName().toLowerCase())
+                                .distinct()
+                                .limit(count)
+                                .collect(toList())))));
     }
 
     private static Comparator<NameData> byRankCountAndName = comparing(NameData::getRank).thenComparing(NameData::getCount).thenComparing(NameData::getName, String::compareToIgnoreCase);

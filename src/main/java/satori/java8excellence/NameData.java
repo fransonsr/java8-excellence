@@ -140,6 +140,25 @@ public class NameData {
         return true;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("NameData [birthYear=")
+            .append(birthYear)
+            .append(", gender=")
+            .append(gender)
+            .append(", ethnicity=")
+            .append(ethnicity)
+            .append(", name=")
+            .append(name)
+            .append(", count=")
+            .append(count)
+            .append(", rank=")
+            .append(rank)
+            .append("]");
+        return builder.toString();
+    }
+
 
 
 }
